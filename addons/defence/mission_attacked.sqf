@@ -24,6 +24,7 @@ diag_log format["[BD/WAI] Attack - defend %1 @ %2",_name,_position];
 //spawn position
 _search = [_position,1200,2000,20,0,2000,0];
 _startPos = _search call BIS_fnc_findSafePos;
+_startPos set [2,0];
 while {[_startPos,1200] call isNearPlayer} do {_startPos = _search call BIS_fnc_findSafePos;};
 
 //Attackers
