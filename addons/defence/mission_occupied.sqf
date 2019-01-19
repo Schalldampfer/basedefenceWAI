@@ -48,9 +48,11 @@ _grp = [[(_position select 0)-10,(_position select 1)-10,0],7,"Medium",       0,
 	true, // show mission marker?
 	false, // make minefields available for this mission
 	["crate"], // Completion type: ["crate"], ["kill"], or ["assassinate", _unitGroup],
-	format["Bandits have occupied %1's base! Take it back!",_name], // mission announcement
-	"Survivors have recaptured the base. Reward is near plotpole.", // mission success
-	"Bandits have left the base." // mission fail
+	[
+		format["Bandits have occupied %1's base! Take it back!",_name], // mission announcement
+		"Survivors have recaptured the base. Reward is near plotpole.", // mission success
+		"Bandits have left the base." // mission fail
+	]
 ] call mission_winorfail;
 
 //allow next mission

@@ -73,9 +73,11 @@ _wp setWaypointCompletionRadius 200;
 	true, // show mission marker?
 	false, // make minefields available for this mission
 	["kill"], // Completion type: ["crate"], ["kill"], or ["assassinate", _unitGroup],
-	format["Bandits are going to attacking %1's base!",_name], // mission announcement
-	"Survivors have defended the base. Reward is near plotpole.", // mission success
-	"Bandits have left the base." // mission fail
+	[
+		format["Bandits are going to attacking %1's base!",_name], // mission announcement
+		"Survivors have defended the base. Reward is near plotpole.", // mission success
+		"Bandits have left the base." // mission fail
+	]
 ] call mission_winorfail;
 
 /*
