@@ -25,7 +25,7 @@ if (!isServer) exitWith {diag_log "wtf";};
 	private ["_missionwait","_plot","_plots","_mission"];
 	waitUntil{!isNil "WAI_MarkerReady"};
 	waitUntil{WAI_MarkerReady};
-	_missionwait = ((wai_mission_timer select 0) + (wai_mission_timer select 1)) * 30;
+	_missionwait = (random((wai_mission_timer select 1) - (wai_mission_timer select 0)) + (wai_mission_timer select 0)) * 60;
 	wai_h_starttime = diag_tickTime - _missionwait;
 	BD_active = false;
 	_plots = (entities "Plastic_Pole_EP1_DZ");
@@ -79,7 +79,7 @@ BD_selectPoleOut = {
 	_pole = objNull;
 	if (count BD_activePlots > 0) then {
 		_pole = BD_activePlots call BIS_fnc_selectRandom;
-		while {({(_pole distance _x) < 1200} count playableUnits) > 0} do {_pole = BD_activePlots call BIS_fnc_selectRandom;};
+		while {({(_pole distance _x) < 1200} count playableUnits) > 0 || _pole call wai_isNearMission} do {_pole = BD_activePlots call BIS_fnc_selectRandom;};
 	};
 	_pole
 };
@@ -90,7 +90,7 @@ BD_selectPoleIn = {
 	_pole = objNull;
 	if (count BD_activePlots > 0) then {
 		_pole = BD_activePlots call BIS_fnc_selectRandom;
-		while {({(_pole distance _x) < 500} count playableUnits) < 1} do {_pole = BD_activePlots call BIS_fnc_selectRandom;};
+		while {({(_pole distance _x) < 200} count playableUnits) < 1 || _pole call wai_isNearMission} do {_pole = BD_activePlots call BIS_fnc_selectRandom;};
 	};
 	_pole
 };
@@ -117,4 +117,17 @@ BD_poleOwnerName = {
 		_name = name _player;
 	};
 	_name
+};
+
+wai_isNearMission = {
+	private ["_validspot","_position"];
+	_position = _this;
+	_validspot = false;
+	
+	{
+		if (getMarkerColor _x != "" && (_position distance (getMarkerPos _x) < wai_avoid_missions)) exitWith {
+			_validspot = true;
+		};
+	} count wai_mission_markers;
+	_validspot;
 };

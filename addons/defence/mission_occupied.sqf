@@ -18,7 +18,7 @@ diag_log format["[BD/WAI] Occupation - defend %1 @ %2",_name,_position];
 
 // Spawn crates
 [[
-	[[3,2,8,3,1],crates_small,[0,0,_position select 2]]
+	[[[3,ai_wep_machine],[3,crate_tools_sniper],10,[3,ai_wep_sniper],2],crates_small,[0,0,_position select 2]]
 ],_position,_mission] call wai_spawnCrate;
 
 //Troops
