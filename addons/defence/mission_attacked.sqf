@@ -54,6 +54,10 @@ _grp allowFleeing 0;
 diag_log format["[BD/WAI] Attack %1 units",count (units _grp)];
 
 //move
+_wp = _grp addWaypoint [[(_position select 0),(_position select 1),0],DZE_PlotPole select 1];
+_wp setWaypointType "MOVE";
+_wp setWaypointSpeed "FULL";
+_wp setWaypointCompletionRadius 500;
 for "_x" from 1 to 4 do
 {
 	_wp = _grp addWaypoint [[(_position select 0),(_position select 1),0],DZE_PlotPole select 1];
