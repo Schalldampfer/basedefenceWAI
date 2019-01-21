@@ -22,13 +22,13 @@ BD_static = ["StaticMGWeapon","StaticGrenadeLauncher","StaticSEARCHLight"]; //we
 if (!isServer) exitWith {diag_log "wtf";};
 
 [] spawn { // monitor
-	private ["_missionwait","_plot","_plots","_mission"];
+	private ["_missionwait","_plot","_mission"];
 	waitUntil{!isNil "WAI_MarkerReady"};
 	waitUntil{WAI_MarkerReady};
 	_missionwait = (random((wai_mission_timer select 1) - (wai_mission_timer select 0)) + (wai_mission_timer select 0)) * 60;
 	wai_h_starttime = diag_tickTime - _missionwait;
 	BD_active = false;
-	_plots = (entities "Plastic_Pole_EP1_DZ");
+	BD_allPlots = (entities "Plastic_Pole_EP1_DZ");
 	while {true} do {
 		if (!BD_active) then {
 			//update plotpoles
@@ -42,7 +42,7 @@ if (!isServer) exitWith {diag_log "wtf";};
 				if ((_plot getVariable ["ownerPUID","1"]) in BD_activeUIDs || {(_x select 0) in BD_activeUIDs} count (_plot getVariable ["plotfriends", []]) > 0) then {
 					BD_activePlots set [count BD_activePlots, _plot];
 				};
-			} forEach _plots;
+			} forEach BD_allPlots;
 			
 			//run mission
 			if ((count BD_activePlots > 0) && (h_missionsrunning < wai_hero_limit) && (diag_tickTime - wai_h_starttime > _missionwait)) then {

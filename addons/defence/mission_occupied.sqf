@@ -5,7 +5,7 @@ _mission = count wai_mission_data -1;
 
 //select plotpole to spawn mission
 _pole = call BD_selectPoleOut;
-if (isNull _pole) exitWith {
+if ((isNil "_pole")||(isNull _pole)) exitWith {
 	wai_mission_markers = wai_mission_markers - [("MainHero" + str(_mission))];
 	wai_mission_data set [_mission, -1];
 	BD_active = false;
@@ -15,6 +15,7 @@ if (isNull _pole) exitWith {
 _position = getPos _pole;
 _name = _pole call BD_poleOwnerName;//name of owner
 diag_log format["[BD/WAI] Occupation - defend %1 @ %2",_name,_position];
+BD_allPlots = (entities "Plastic_Pole_EP1_DZ") - [_pole];
 
 // Spawn crates
 [[
