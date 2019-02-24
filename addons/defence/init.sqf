@@ -16,7 +16,7 @@ Author:
 
 /*config*/
 BD_players = 1;//least number of players to run mission
-BD_static = ["StaticMGWeapon","StaticGrenadeLauncher","StaticSEARCHLight"]; //weapons AIs will get in
+BD_static = ["StaticMGWeapon","StaticGrenadeLauncher","StaticSEARCHLight","StaticAAWeapon","StaticATWeapon"]; //weapons AIs will get in
 
 /*run*/
 if (!isServer) exitWith {diag_log "wtf";};
@@ -25,10 +25,10 @@ if (!isServer) exitWith {diag_log "wtf";};
 	private ["_missionwait","_plot","_mission"];
 	waitUntil{!isNil "WAI_MarkerReady"};
 	waitUntil{WAI_MarkerReady};
-	_missionwait = (random((wai_mission_timer select 1) - (wai_mission_timer select 0)) + (wai_mission_timer select 0)) * 60;
-	wai_h_starttime = diag_tickTime - _missionwait;
+	_missionwait = ((wai_mission_timer select 0) + (wai_mission_timer select 1)) * 30;
 	BD_active = false;
-	BD_allPlots = (entities "Plastic_Pole_EP1_DZ");
+	BD_initPlots = (entities "Plastic_Pole_EP1_DZ");
+	BD_allPlots = +BD_initPlots;
 	while {true} do {
 		if (!BD_active) then {
 			//update plotpoles
@@ -39,7 +39,7 @@ if (!isServer) exitWith {diag_log "wtf";};
 			BD_activePlots = []; //list of plotpoles for active players
 			{
 				_plot = _x;
-				if ((_plot getVariable ["ownerPUID","1"]) in BD_activeUIDs || {(_x select 0) in BD_activeUIDs} count (_plot getVariable ["plotfriends", []]) > 0) then {
+				if ((_plot getVariable ["ownerPUID","1"]) in BD_activeUIDs) then { //if ((_plot getVariable ["ownerPUID","1"]) in BD_activeUIDs || {(_x select 0) in BD_activeUIDs} count (_plot getVariable ["plotfriends", []]) > 0) then {
 					BD_activePlots set [count BD_activePlots, _plot];
 				};
 			} forEach BD_allPlots;
@@ -55,7 +55,7 @@ if (!isServer) exitWith {diag_log "wtf";};
 					BD_active = true;
 					diag_log format["[BD/WAI] ActivePlots:%1 ActiveUIDs:%2",count BD_activePlots,count BD_activeUIDs];
 					_mission = ["mission_occupied","mission_attacked"] call BIS_fnc_selectRandom;
-					if ({[getPos _x,1200] call isNearPlayer} count BD_activePlots < 1) then {
+					if ({[getPos _x,200] call isNearPlayer} count BD_activePlots < 1) then {
 						_mission = "mission_occupied";
 					};
 					execVM format ["\z\addons\dayz_server\addons\defence\%1.sqf",_mission];

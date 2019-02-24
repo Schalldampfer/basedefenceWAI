@@ -1,21 +1,24 @@
-private ["_mission","_pole","_position","_name","_grp","_static"];
+private ["_mission","_pole","_position","_name","_grp","_static","_abrt"];
 
 // Get mission number, important we do this early
 _mission = count wai_mission_data -1;
 
 //select plotpole to spawn mission
 _pole = call BD_selectPoleOut;
-if ((isNil "_pole")||(isNull _pole)) exitWith {
+_abrt = {
 	wai_mission_markers = wai_mission_markers - [("MainHero" + str(_mission))];
 	wai_mission_data set [_mission, -1];
 	BD_active = false;
 	h_missionsrunning = h_missionsrunning - 1;
+	WAI_MarkerReady = true;
 	diag_log "[BD/WAI] Occupation - good pole is not found";
 };
+if (isNil "_pole") exitWith {call _abrt;};
+if (isNull _pole) exitWith {call _abrt;};
 _position = getPos _pole;
 _name = _pole call BD_poleOwnerName;//name of owner
 diag_log format["[BD/WAI] Occupation - defend %1 @ %2",_name,_position];
-BD_allPlots = (entities "Plastic_Pole_EP1_DZ") - [_pole];
+BD_allPlots = +BD_initPlots - [_pole];
 
 // Spawn crates
 [[
@@ -44,7 +47,7 @@ _grp = [[(_position select 0)-10,(_position select 1)-10,0],7,"Medium",       0,
 	_mission, // Mission number
 	_position, // Position of mission
 	"Medium", // Difficulty
-	"Occupied Base", // Name of Mission
+	"Occupied Player Base", // Name of Mission
 	"MainHero", // Mission Type: MainHero or MainBandit
 	true, // show mission marker?
 	false, // make minefields available for this mission
