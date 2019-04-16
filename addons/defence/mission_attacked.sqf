@@ -35,13 +35,13 @@ while {[_startPos,1200] call isNearPlayer} do {_startPos = _search call BIS_fnc_
 _grps = [];
 
 //Troops
-_grp = [_startPos,6,"Medium",[0,"AT"],4,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
+_grp = [_startPos,3,"Medium",[0,"AT"],3,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
 _grps = _grps + [_grp];
-_grp = [_startPos,6,"Medium",[0,"AT"],4,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
+_grp = [_startPos,3,"Medium",[0,"AT"],3,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
 _grps = _grps + [_grp];
-_grp = [_startPos,4,"Medium",       2,6,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
+_grp = [_startPos,3,"Medium",       2,5,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
 _grps = _grps + [_grp];
-_grp = [_startPos,4,"Medium",       1,4,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
+_grp = [_startPos,3,"Medium",       1,3,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
 _grps = _grps + [_grp];
 
 {
@@ -71,7 +71,6 @@ _grp selectLeader ((units _grp) select 0);
 _grp allowFleeing 0;
 (units _grp) allowGetIn true;
 
-/*
 _load = {
 	private ["_i","_veh","_grp","_cnt"];
 	_veh = _this select 0;
@@ -89,7 +88,7 @@ _load = {
 };
 [_veh1,_grp] call _load;
 [_veh2,_grp] call _load;
-*/
+	_veh removeAllEventHandlers "GetOut";
 
 diag_log format["[BD/WAI] Attack %1 units",count (units _grp)];
 
@@ -122,7 +121,6 @@ _wp setWaypointCompletionRadius 200;
 	]
 ] call mission_winorfail;
 
-/*
 //units try to get in static weapons
 sleep 300;
 _units = units _grp;
@@ -144,7 +142,7 @@ _units = units _grp;
 		};
 	} forEach _units;
 } forEach (_position nearEntities [BD_static, DZE_PlotPole select 0]);
-*/
+{_x doMove _position;} forEach _units;
 
 //allow next mission
 sleep ((wai_mission_timeout select 1)*60);
