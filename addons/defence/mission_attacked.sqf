@@ -85,10 +85,10 @@ _load = {
 		};
 		if (_i >= _cnt) exitWith {};
 	} forEach (units _grp);
+	_veh removeAllEventHandlers "GetOut";
 };
 [_veh1,_grp] call _load;
 [_veh2,_grp] call _load;
-	_veh removeAllEventHandlers "GetOut";
 
 diag_log format["[BD/WAI] Attack %1 units",count (units _grp)];
 
@@ -115,7 +115,7 @@ _wp setWaypointCompletionRadius 200;
 	false, // make minefields available for this mission
 	["kill"], // Completion type: ["crate"], ["kill"], or ["assassinate", _unitGroup],
 	[
-		format["Bandits are going to attacking %1's base!",_name], // mission announcement
+		format["Bandits are going to attack %1's base!",_name], // mission announcement
 		"Survivors have defended the base. Reward is near plotpole.", // mission success
 		"Bandits have left the base." // mission fail
 	]
