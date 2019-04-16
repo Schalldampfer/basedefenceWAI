@@ -64,7 +64,7 @@ if (!isServer) exitWith {diag_log "wtf";};
 			
 		};
 		
-		if (random 1 > 0.8) then {diag_log format["[BD/WAI] status WAI_MarkerReady:%1 DTime:%2 MissionSlot:%3 BD_active:%4",WAI_MarkerReady,diag_tickTime - wai_h_starttime,wai_hero_limit - h_missionsrunning,BD_active];};
+		//diag_log format["[BD/WAI] status WAI_MarkerReady:%1 DTime:%2 MissionSlot:%3 BD_active:%4",WAI_MarkerReady,diag_tickTime - wai_h_starttime,wai_hero_limit - h_missionsrunning,BD_active];
 		
 		//wait
 		sleep 60;
