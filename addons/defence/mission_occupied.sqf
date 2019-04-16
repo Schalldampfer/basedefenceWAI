@@ -26,10 +26,10 @@ BD_allPlots = +BD_initPlots - [_pole];
 ],_position,_mission] call wai_spawnCrate;
 
 //Troops
-       [[(_position select 0)+10,(_position select 1)+10,0],4,"Medium",[0,"AT"],4,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
-       [[(_position select 0)+10,(_position select 1)-10,0],4,"Medium",[0,"AA"],4,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
-       [[(_position select 0)-10,(_position select 1)+10,0],7,"Medium","Random",5,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
-_grp = [[(_position select 0)-10,(_position select 1)-10,0],7,"Medium",       0,4,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
+       [[(_position select 0)+10,(_position select 1)+10,0],4,"Medium",[0,"AT"],3,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
+       [[(_position select 0)+10,(_position select 1)-10,0],4,"Medium",[0,"AA"],3,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
+       [[(_position select 0)-10,(_position select 1)+10,0],7,"Medium","Random",4,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
+_grp = [[(_position select 0)-10,(_position select 1)-10,0],7,"Medium",       0,3,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
 
 //get units in static weapons
 {
