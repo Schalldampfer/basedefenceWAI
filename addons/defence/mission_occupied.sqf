@@ -1,4 +1,4 @@
-private ["_mission","_pole","_position","_name","_grp","_static","_abrt"];
+private ["_mission","_pole","_position","_name","_grp","_static","_abrt","_messages","_statics"];
 
 // Get mission number, important we do this early
 _mission = count wai_mission_data -1;
@@ -22,32 +22,52 @@ BD_allPlots = +BD_initPlots - [_pole];
 
 // Spawn crates
 [[
-	[[[3,ai_wep_machine],[3,crate_tools_sniper],10,[3,ai_wep_sniper],2],crates_small,[0,0,_position select 2]]
+	[[[1,ai_wep_special_rare],[2,crate_tools_sniper],[1,crate_items_gems],[1,ai_wep_sniper+ai_wep_machine],1],crates_small,[0,0,(_position select 2) + 0.5]]
 ],_position,_mission] call wai_spawnCrate;
 
 //Troops
-       [[(_position select 0)+10,(_position select 1)+10,0],4,"Medium",[0,"AT"],3,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
-       [[(_position select 0)+10,(_position select 1)-10,0],4,"Medium",[0,"AA"],3,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
-       [[(_position select 0)-10,(_position select 1)+10,0],7,"Medium","Random",4,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
-_grp = [[(_position select 0)-10,(_position select 1)-10,0],7,"Medium",       0,3,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
+[[(_position select 0)+25,(_position select 1)+25,0],5,"Medium",["Random","AT"],3,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
+[[(_position select 0)+25,(_position select 1)-25,0],5,"Medium",["Random","AA"],3,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
 
 //get units in static weapons
-{
-	_static = _x;
+_statics = _position nearEntities [BD_static, DZE_PlotPole select 1];
+_grp = [_position,6 + (count _statics),"Medium","Random",3,"Random","Bandit","Random","Bandit",_mission] call spawn_group;
+if (count _statics > 0) then {
 	{
-		if (vehicle _x == _x) exitWith {
-			_x moveInGunner _static;
-			diag_log format["[BD/WAI] %1 gets in %2",name _x, typeOf _static];
-			[_static,typeOf _static] call load_ammo2;
-		};
-	} forEach (units _grp);
-} forEach (_position nearEntities [BD_static, DZE_PlotPole select 0]);
+		_static = _x;
+		{
+			if (vehicle _x == _x && {!(_x in ["FakeWeapon","CarHorn","SportCarHorn"])} count (weapons _static) > 0) exitWith {
+				_x moveInGunner _static;
+				diag_log format["[BD/WAI] %1 gets in %2",name _x, typeOf _static];
+				_static call load_ammo2;
+				_static removeAllEventHandlers "HandleDamage";
+			};
+		} forEach (units _grp);
+	} forEach _statics;
+	if ({_x isKindOf "StaticMortar"} count _statics > 0) then {_grp spawn WAI_arty_fire};
+};
+
+//Spawn Vehicle
+[cargo_trucks,[_position,1,150,5,1,2000,0] call BIS_fnc_findSafePos,_mission] call custom_publish;
+
+//Open Doors
+{
+	_x animate ["Open_hinge", 1];
+	_x animate ["Open_latch", 1];
+	_x animate ["Open_door",1];
+	_x animate ["DoorR", 1];
+	_x animate ["DoorL", 1];
+} forEach nearestObjects [_position, ["Land_DZE_WoodDoor_Base","CinderWallDoor_DZ_Base","Land_DZE_WoodDoorLocked_Base","CinderWallDoorLocked_DZ_Base","WoodenGate_Base"], DZE_PlotPole select 1];
+
+//Message
+RemoteMessage = ["dynamic_text",["Take it back!","Bandits have occupied your base!"],["0.40","#FFFFFF","0.60","#ffff66",0,-.35,10,0.5]];
+(owner (_pole call BD_poleOwner)) publicVariableClient "RemoteMessage";
 
 [
 	_mission, // Mission number
 	_position, // Position of mission
 	"Medium", // Difficulty
-	"Occupied Player Base", // Name of Mission
+	format["Occupied %1's Base",_name], // Name of Mission
 	"MainHero", // Mission Type: MainHero or MainBandit
 	true, // show mission marker?
 	false, // make minefields available for this mission

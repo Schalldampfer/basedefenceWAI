@@ -15,8 +15,8 @@ Author:
 */
 
 /*config*/
-BD_players = 1;//least number of players to run mission
-BD_static = ["StaticMGWeapon","StaticGrenadeLauncher","StaticSEARCHLight","StaticAAWeapon","StaticATWeapon"]; //weapons AIs will get in
+BD_players = 2;//least number of players to run mission
+BD_static = ["LandVehicle","Helicopter"]; //weapons AIs will get in
 
 /*run*/
 if (!isServer) exitWith {diag_log "wtf";};
@@ -25,6 +25,7 @@ if (!isServer) exitWith {diag_log "wtf";};
 	private ["_missionwait","_plot","_mission"];
 	waitUntil{!isNil "WAI_MarkerReady"};
 	waitUntil{WAI_MarkerReady};
+	diag_log "[BD/WAI] Activating Base Defence mission.";
 	_missionwait = ((wai_mission_timer select 0) + (wai_mission_timer select 1)) * 30;
 	BD_active = false;
 	BD_initPlots = (entities "Plastic_Pole_EP1_DZ");
@@ -79,7 +80,7 @@ BD_selectPoleOut = {
 	_pole = objNull;
 	if (count BD_activePlots > 0) then {
 		_pole = BD_activePlots call BIS_fnc_selectRandom;
-		while {({(_pole distance _x) < 1200} count playableUnits) > 0 || _pole call wai_isNearMission} do {_pole = BD_activePlots call BIS_fnc_selectRandom;};
+		while {({(_pole distance _x) < 1200} count playableUnits) > 0 || _pole call wai_isNearMission} do {_pole = BD_activePlots call BIS_fnc_selectRandom;sleep 1;};
 	};
 	_pole
 };
@@ -90,7 +91,7 @@ BD_selectPoleIn = {
 	_pole = objNull;
 	if (count BD_activePlots > 0) then {
 		_pole = BD_activePlots call BIS_fnc_selectRandom;
-		while {({(_pole distance _x) < 200} count playableUnits) < 1 || _pole call wai_isNearMission} do {_pole = BD_activePlots call BIS_fnc_selectRandom;};
+		while {({(_pole distance _x) < 200} count playableUnits) < 1 || _pole call wai_isNearMission} do {_pole = BD_activePlots call BIS_fnc_selectRandom;sleep 1;};
 	};
 	_pole
 };
